@@ -52,8 +52,6 @@ class Command(BaseCommand):
             reward.expires_at = expired_at
             batch.append(reward)
 
-            logger.info("Expired stale reward id=%s", reward.pk)
-
             if len(batch) >= 1000:
                 with transaction.atomic():
                     Reward.objects.bulk_update(
@@ -61,6 +59,8 @@ class Command(BaseCommand):
                         ["status", "expires_at"],
                         batch_size=1000,
                     )
+                for reward in batch:
+                    logger.info("Expired stale reward id=%s", reward.pk)
                 updated += len(batch)
                 batch.clear()
 
@@ -71,6 +71,8 @@ class Command(BaseCommand):
                     ["status", "expires_at"],
                     batch_size=1000,
                 )
+            for reward in batch:
+                logger.info("Expired stale reward id=%s", reward.pk)
             updated += len(batch)
 
         self.stdout.write(f"Expired rewards updated: {updated}")
