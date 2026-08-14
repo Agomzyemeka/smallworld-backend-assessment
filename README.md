@@ -6,15 +6,24 @@ The management command is implemented at:
 
 `rewards/management/commands/audit_stale_rewards.py`
 
-### Assumption
+## Runnable Django assessment harness
 
-The supplied assessment does not specify the Django app label containing `Reward`, so the example imports:
+The original assessment specifies the `Reward` model fields required for Q8 but does not provide the actual SmallWorld Django project or app label. To make the submitted management command independently reviewable, this repository includes a minimal Django project and `rewards` app containing only the fields specified by the assessment.
 
-```python
-from rewards.models import Reward
+This harness is **for assessment demonstration only**. It is not intended to represent SmallWorld's production project structure.
+
+### Setup
+
+```bash
+python -m venv .venv
+# Windows PowerShell:
+.venv\\Scripts\\Activate.ps1
+# macOS/Linux:
+# source .venv/bin/activate
+
+python -m pip install -r requirements.txt
+python manage.py migrate
 ```
-
-If the actual project uses another app label, change that one import.
 
 ### Usage
 
@@ -28,6 +37,12 @@ Apply the fix:
 
 ```bash
 python manage.py audit_stale_rewards --fix
+```
+
+Run tests:
+
+```bash
+python manage.py test
 ```
 
 The command:
